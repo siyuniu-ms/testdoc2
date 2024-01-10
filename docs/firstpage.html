@@ -1,1 +1,53 @@
-hello
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>AISKU Sample</title>
+    <link rel="stylesheet" href="style/style.css"/>
+    <script type="text/javascript">
+      var connectionString = "YOUR_CONNECTION_STRING";
+    </script>
+
+<script type="text/javascript">
+!function(T,l,y){<!-- Removed the Snippet code for brevity -->}(window,document,{
+src: "https://js.monitor.azure.com/scripts/b/ai.3.gbl.min.js",
+crossOrigin: "anonymous",
+onInit: function (sdk) {
+  sdk.addTelemetryInitializer(function (envelope) {
+    envelope.data.someField = 'This item passed through my telemetry initializer';
+  });
+}, // Once the application insights instance has loaded and initialized this method will be called
+cfg: { // Application Insights Configuration
+    connectionString: "YOUR_CONNECTION_STRING"
+}});
+</script>
+
+  </head>
+  <body>
+    <h1>Microsoft Application Insights JavaScript SDK - AISKU</h1>
+    <script>
+      let appInsights = new Microsoft.ApplicationInsights.ApplicationInsights({ config: {connectionString: "InstrumentationKey=814a172a-92fd-4950-9023-9cf13bb65696;IngestionEndpoint=https://eastus-8.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus.livediagnostics.monitor.azure.com/", disableInstrumentationKeyValidation: true}});
+      appInsights.loadAppInsights();
+      window.appInsights = appInsights;
+      const properties = {
+        bigInt: 9999999999999999,
+        booleanValue: true,
+        callback: () => { },
+        emoji: '🤷‍♀️',
+        largeValue: Infinity,
+        listOfValues: [1, 3],
+        nullValue: null,
+        number: 5,
+        notANumber: NaN,
+        someDate: new Date(),
+        symbol: Symbol,
+        undefinedValue: undefined
+    }
+  const eventName = 'DataTypeTesting'
+
+  appInsights.trackEvent({ name: eventName }, properties);
+    </script>
+
+  </body>
+</html>
