@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Inject Script
-        run:  node injectScript.js
+        run:  node ./injectScript.js
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Pages
