@@ -26,10 +26,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Inject Script
-        run:  node ./injectScript.js
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Inject Script
+        run:  node ./injectScript.js
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Build with Jekyll
