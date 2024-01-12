@@ -1,3 +1,4 @@
 # what if it is a markdown file
 
-{% include script.html %}
+
+<!-- {% include script.html %} -->
