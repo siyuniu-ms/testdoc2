@@ -1,4 +1,5 @@
 # what if it is a markdown file
 
-
-<!-- {% include script.html %} -->
+<!-- BEGIN_INCLUDE -->
+{% include script.html %}
+<!-- END_INCLUDE -->
