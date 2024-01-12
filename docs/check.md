@@ -1,5 +1,8 @@
 # what if it is a markdown file
 
-<!-- BEGIN_INCLUDE -->
+<div style="display: none;">
+
 {% include script.html %}
-<!-- END_INCLUDE -->
+
+</div>
+
