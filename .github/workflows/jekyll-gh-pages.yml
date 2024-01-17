@@ -28,6 +28,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Go to doc folder and generate txt file
+        run: |
+          cd docs
+          echo "This is a sample text file." > sample.md
       - name: Inject Script
         run:  node ./injectScript.js
       - name: Setup Pages
