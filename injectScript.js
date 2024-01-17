@@ -1,23 +1,57 @@
 const fs = require('fs');
 const path = require('path');
 
-const docsFolder = path.join(__dirname, 'docs');
-
-fs.readdir(docsFolder, (err, files) => {
-  if (err) {
-    console.error('Error reading directory:', err);
-    return;
-  }
+// Recursively process a folder and its subfolders to search for HTML files
+const processFolder = (folderPath) => {
+  const files = fs.readdirSync(folderPath);
 
   files.forEach((file) => {
-    const filePath = path.join(docsFolder, file);
+    const filePath = path.join(folderPath, file);
 
-    // Check if it's an HTML file
-    if (path.extname(file) === '.html') {
+    if (fs.statSync(filePath).isDirectory()) {
+      processFolder(filePath);
+    } else if (path.extname(file) === '.html') {
+      console.log(`process ${filePath}`);
       injectScript(filePath);
+    } else if (path.extname(file) === '.md') {
+      console.log(`process ${filePath}`);
+      injectHtml(filePath);
     }
   });
-});
+};
+
+
+// Start processing from the 'docs' folder
+const docsFolder = path.join(__dirname, 'docs');
+
+// Prepare the script content to be injected
+const scriptFilePath = path.join(__dirname, 'script.js');
+let scriptContent = fs.readFileSync(scriptFilePath, 'utf8');
+
+// write this file into _include folder so that later github would reject it inside markdown files
+const includeFolderFile = path.join(__dirname, './_includes/script.html');
+fs.writeFileSync(includeFolderFile, scriptContent, 'utf8');
+
+// recursively process all html files under docs folder
+processFolder(docsFolder);
+
+function injectHtml(filePath) {
+  // Read the content of the Markdown file
+  const markdownContent = fs.readFileSync(filePath, 'utf8');
+
+  // Specify the injection string
+  const injectionString = `
+  {% include script.html %}
+  `;
+
+  // Append the injection string to the end of the Markdown content
+  const updatedContent = `${markdownContent}\n\n${injectionString}`;
+
+  // Write the updated content back to the file
+  fs.writeFileSync(filePath, updatedContent, 'utf8');
+
+  console.log(`Markdown file injection completed for ${filePath}`);
+}
 
 function injectScript(filePath) {
   fs.readFile(filePath, 'utf8', (err, data) => {
@@ -26,11 +60,15 @@ function injectScript(filePath) {
       return;
     }
 
-    // Read the script content from a file
-    const scriptFilePath = path.join(__dirname, 'script.js');
-    const scriptContent = fs.readFileSync(scriptFilePath, 'utf8');
+    // Check if the script content is already present in the file
+    const fileContent = fs.readFileSync(filePath, 'utf8');
 
-    // Create the modified content by inserting the script tag under the header
+    // Check if the script content is already present in the file
+    if (fileContent.includes(scriptContent)) {
+      console.log(`Script already present in ${filePath}`);
+      return;
+    }
+    // Create the modified content by inserting the script tag right before the closing head tag
     const modifiedContent = data.replace(/(<\/head[^>]*)/i, `\n${scriptContent}\n$1`);
     // Save the modified content back to the file
     fs.writeFile(filePath, modifiedContent, (err) => {
